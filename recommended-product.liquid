@@ -1,0 +1,47 @@
+note: Put this code in your product-template 
+
+
+{%- assign products_per_page = 10 -%}
+{%- paginate collections.all.products by products_per_page -%}
+<div class="product_custome_recomm">
+  <div class="container">
+    <h4 class="sec-heading">View Similar <span>Products</span></h4>
+    {% assign vendor = product.vendor %}
+    {% assign product_handle = product.handle %}
+    {% assign counter = '' %}
+    <div class="related-main-pro slider-gallery products-slider">
+
+      {% for product in collections.all.products %}
+
+      {% capture temp %}{{ counter }}*{% endcapture %}
+      {% assign counter = temp %}
+      <div class="relatedpro product-li">
+         <div class="product-wrap">
+        <div class="relative product_image swap-false">
+          <a href="{{ product.url | within: collection }}" title="{{ product.title }}">
+            <div class="image__container">
+              <div class="image-element__wrap">
+                <img src="{{ product.images.first | product_img_url: 'medium' }}" alt="{{ product.title }}" />
+              </div>
+              <div class="banner_holder">
+                {% if product.available %}
+                {% if settings.sale_banner_enabled and product.compare_at_price_max > product.price %}
+                <div class="sale_banner thumbnail_banner">{{ 'collections.general.sale' | t }}</div>
+                {% endif %}
+                {% endif %}
+              </div></div>
+            <div class="product_name_r product-details"><h3 class="product-title title">{{product.title}}</h3>
+              <span class="price ">
+                <span class="price_money">{%if product.handle == 'bespoke-powder-brush'%}{{product.compare_at_price |money}}{%else%}{{product.price |money}}{%endif%}</span>
+              </span>
+              <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+            </div>
+          </a> 
+      </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+</div>
+{%endpaginate%}
